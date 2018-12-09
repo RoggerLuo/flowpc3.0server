@@ -24,7 +24,7 @@ def note(note_id): # CRUD
 
 @app.route('/categories', methods=['GET'])
 def categories(): # 各种条件查询
-    return query_notes()
+    return query_categories()
 
 @app.route('/category/<category_id>', methods=['POST', 'PUT', 'DELETE'])
 def category(note_id): # CRUD
@@ -37,4 +37,4 @@ def category(note_id): # CRUD
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5555, debug=True) 
+    app.run(host='0.0.0.0', port=5556, debug=False) 

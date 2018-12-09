@@ -1,12 +1,18 @@
 from _mysql import run
 import numpy as np
-
-def query_notes(categoryId=False,pageSize=10,pageNum=1):
+def query_notes(categoryId,pageSize,pageNum):
+    if pageNum == None:
+        pageNum = 1
+    if pageSize == None:
+        pageSize = 10
+    if categoryId == None:
+        categoryId = False
+    pageNum = int(pageNum)
+    pageSize = int(pageSize)
     def callback(conn,cursor):
         cursor.execute(
-            'SELECT * from notes where status = 0 Order By modify_time Desc limit %s,%s',
-            ((pageNum-1)*pageSize,pageSize)
+            "SELECT * from note where status = 0 Order By modify_time Desc limit %s,%s",
+            [(pageNum-1)*pageSize,pageSize]
         )
-        values = cursor.fetchall()
-        return values
+        return cursor.fetchall()
     return run(callback)
