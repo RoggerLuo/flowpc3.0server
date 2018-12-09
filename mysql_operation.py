@@ -1,10 +1,17 @@
 import time
-import mysql.connector
+from mysql.connector import connect
 
+def select2(sql_cmd, param):
+    try:
+        cursor.execute(sql_cmd, param)
+    except mysql.connector.Error as e:
+        print('connect fails!{}'.format(e))
+    finally:
+        cursor.close()
+        conn.close()
 
-def connect2Mysql():
-    conn = mysql.connector.connect(
-        user='root', password='as56210', database='flow4.0', use_unicode=True)
+def open():
+    conn = connect(user='root', password='as56210', database='flowpc3.0', use_unicode=True)
     cursor = conn.cursor()
     return conn, cursor
 
