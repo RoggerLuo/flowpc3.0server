@@ -14,5 +14,7 @@ def query_notes(categoryId,pageSize,pageNum):
             "SELECT * from note where status = 0 Order By modify_time Desc limit %s,%s",
             [(pageNum-1)*pageSize,pageSize]
         )
-        return cursor.fetchall()
+        values = cursor.fetchall()
+        columes = ['id','content','category','create_time','modify_time','status']
+        return [dict(zip(columes,value)) for value in values]
     return run(callback)
