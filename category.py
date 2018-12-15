@@ -2,9 +2,9 @@ from dbEngine import run
 import numpy as np
 def query_categories():
     def callback(conn,cursor):
-        cursor.execute("SELECT * from category order by order_number Desc")
+        cursor.execute("SELECT * from category")
         values = cursor.fetchall()
-        columes = ['id','name','prediction','order_number']
+        columes = ['id','name','prediction']
         return [dict(zip(columes,value)) for value in values]
     return run(callback)
 
