@@ -7,7 +7,6 @@ import flask_cors
 app = Flask(__name__, static_folder='static')
 flask_cors.CORS(app, supports_credentials=True)
 
-
 @app.route('/classify/<note_id>/<cate_id>', methods=['GET'])
 def _classify(note_id,cate_id):
     return classify(note_id,cate_id)
@@ -26,7 +25,8 @@ def notes(): # 各种条件查询
 @app.route('/note', methods=['POST']) # post方法要使用  x-www-form来访问，不然400
 def note(): 
     content = request.form['content']
-    return create_note(content) # return note_id
+    category_id = request.form['category_id']
+    return create_note(content,category_id) # return note_id
 
 @app.route('/note/<note_id>', methods=['POST', 'DELETE'])
 def note_with_id(note_id):
