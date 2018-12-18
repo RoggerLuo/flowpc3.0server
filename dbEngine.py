@@ -2,7 +2,7 @@ import mysql.connector
 import json
 
 def run(callback):
-    conn = mysql.connector.connect(host='192.168.1.4',port='6033',user='root', password='!@as56210', database='flowpc3.0', use_unicode=True)
+    conn = mysql.connector.connect(port='6033',user='root', password='!@as56210', database='flowpc3.0', use_unicode=True)
     cursor = conn.cursor()
     try:
         values = callback(conn, cursor)
@@ -24,3 +24,4 @@ def run(callback):
         cursor.close()
         conn.close()
 
+#host='192.168.1.4',
