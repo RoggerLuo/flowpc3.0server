@@ -1,5 +1,5 @@
 from classify import classify,unclassify
-from category import query_categories,create_category,modify_category,delete_category
+from category import query_categories,create_category,modify_category,delete_category,orderChange
 from note import create_note,modify_note,delete_note
 from notes import query_notes
 from flask import Flask, request
@@ -53,6 +53,10 @@ def category_with_id(category_id):
         return modify_category(category_id,name)
     if request.method == 'DELETE':
         return delete_category(category_id)
+@app.route('/order/<category_id>/<order>', methods=['GET'])
+def order(category_id,order): 
+    return orderChange(category_id,order)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5556, debug=False) 

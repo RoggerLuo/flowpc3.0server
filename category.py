@@ -1,10 +1,17 @@
 from dbEngine import run
 import numpy as np
+def orderChange(category_id,order):
+    def callback(conn,cursor):
+        cursor.execute('UPDATE category set order_number = %s where id = %s', [order, category_id])
+        conn.commit()
+        return 'success'
+    return run(callback)
+
 def query_categories():
     def callback(conn,cursor):
-        cursor.execute("SELECT * from category")
+        cursor.execute("SELECT * from category order by order_number desc")
         values = cursor.fetchall()
-        columes = ['id','name','prediction']
+        columes = ['id','name','prediction','order_number']
         return [dict(zip(columes,value)) for value in values]
     return run(callback)
 
