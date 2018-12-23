@@ -55,8 +55,11 @@ def train(categoryId,yes,no,epoch):
     sess = tf.Session()
     sess.run(tf.global_variables_initializer()) # 每次不写就会报错
 
-    if exists('ckpt'):
-        ckpt = tf.train.get_checkpoint_state('./ckpt')
+    ckptDirName = 'category'+ str(categoryId)
+    subCkptDirPath = 'ckpt/' + ckptDirName
+
+    if exists(subCkptDirPath):
+        ckpt = tf.train.get_checkpoint_state(subCkptDirPath)
         saver.restore(sess, ckpt.model_checkpoint_path)
         print('Restore from', ckpt.model_checkpoint_path)
     print('开始训练')
@@ -88,12 +91,10 @@ def train(categoryId,yes,no,epoch):
             print('----------------------------------------')
 
     # if i%100 == 0:
-    name = 'category'+ str(categoryId)
-    dirName = 'ckpt/' + name
-    folder = os.path.exists(dirName)
+    folder = os.path.exists(subCkptDirPath)
     if not folder:
-        os.makedirs(dirName)
-    saver.save(sess, 'ckpt/' + name +'/model.ckpt')
+        os.makedirs(subCkptDirPath)
+    saver.save(sess, 'ckpt/' + ckptDirName +'/model.ckpt')
 
 
 # train()
