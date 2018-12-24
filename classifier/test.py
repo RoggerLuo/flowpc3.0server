@@ -61,10 +61,10 @@ def train_each_category(categoryId,yes,no):
     if len(yes) < 4:
         print(len(yes))
         return
-    epoch = len(yes)*100
+    epoch = len(yes)*10#0
     train(categoryId,yes,no,epoch)
     notes = get_uncategorized_notes()
-    predictNotesIdList = predict(notes)
+    predictNotesIdList = predict(categoryId,notes)
     print(predictNotesIdList)
     # save(categoryId,predictNotesIdList)
     # 根据yes和no，打乱他们的顺序，随机训练 100*len(yes) 次

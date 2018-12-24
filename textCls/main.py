@@ -24,20 +24,26 @@ def predict(categoryId,notes):
     sess = tf.Session()
     sess.run(tf.global_variables_initializer()) # 每次不写就会报错
 
-    name = 'category'+categoryId
-    pathName = 'ckpt/' + name
-    if exists(pathName):
-        ckpt = tf.train.get_checkpoint_state(pathName)
+    ckptDirName = 'category' + str(categoryId)
+    subCkptDirPath = os.path.join(os.path.dirname(__file__),'ckpt',ckptDirName) # 'ckpt/' + ckptDirName 
+
+    # name = 'category'+categoryId
+    # pathName = 'ckpt/' + name
+    if exists(subCkptDirPath):
+        ckpt = tf.train.get_checkpoint_state(subCkptDirPath)
         saver.restore(sess, ckpt.model_checkpoint_path)
         print('Restore from', ckpt.model_checkpoint_path)
 
     predictList = []
     for note in notes:
-        string = note['content']
-        _y = sess.run(y,feed_dict=predict_feed_fn(string))
-        print(_y)
-        if _y[0][1] > 0.75:
-            predictList.append({'id':note['id']})
+        try:
+            string = note['content']
+            _y = sess.run(y,feed_dict=predict_feed_fn(string))
+            print(_y)
+            if _y[0][1] > 0.75:
+                predictList.append({'id':note['id']})
+        except Exception as e:
+            print(e)
     return predictList    
 
 def train(categoryId,yes,no,epoch):
@@ -55,69 +61,34 @@ def train(categoryId,yes,no,epoch):
     sess = tf.Session()
     sess.run(tf.global_variables_initializer()) # 每次不写就会报错
 
-    ckptDirName = 'category'+ str(categoryId)
-    subCkptDirPath = 'ckpt/' + ckptDirName
+    ckptDirName = 'category' + str(categoryId)
+    subCkptDirPath = os.path.join(os.path.dirname(__file__),'ckpt',ckptDirName) # 'ckpt/' + ckptDirName 
 
     if exists(subCkptDirPath):
         ckpt = tf.train.get_checkpoint_state(subCkptDirPath)
         saver.restore(sess, ckpt.model_checkpoint_path)
         print('Restore from', ckpt.model_checkpoint_path)
-    print('开始训练')
+
     for i in range(epoch):
         string = choice(no)['content']
         flag = False
-        # print(flag)
-        # print(string)
         loss,_ = sess.run([cross_entropy,train_op],feed_dict=feed_fn(string,flag)) # accuracy acc
         if i%100 == 0:
             print('epoch:' + str(i) + '----反向训练----')
-            # print('----[acc]----')
-            # print(acc)
             print('loss:',loss)
             print('----------------------------------------')
         
-
-
         string = choice(yes)['content']
         flag = True
-        # print(flag)
-        # print(string)
         loss,_ = sess.run([cross_entropy,train_op],feed_dict=feed_fn(string,flag)) # acc accuracy
         if i%100 == 0:
             print('epoch:' + str(i) + '----正向训练----')
-            # print('----[acc]----')
-            # print(acc)
             print('loss:',loss)
             print('----------------------------------------')
 
-    # if i%100 == 0:
     folder = os.path.exists(subCkptDirPath)
     if not folder:
         os.makedirs(subCkptDirPath)
-    saver.save(sess, 'ckpt/' + ckptDirName +'/model.ckpt')
-
-
-# train()
-
-# prediction()
-
-
-# string = '先搞课程模块,登陆界面和状态栏以后再搞,杨老师那边先丢点东西过去'
-# _y = sess.run(y,feed_dict=predict_feed_fn(string))
-# print(_y)
-# string = '每天的节点要搞清楚,自己的,公司的,特别是自己的,都是焦虑的来源'
-# _y = sess.run(y,feed_dict=predict_feed_fn(string))
-# print(_y)
-
-# string = '不要把决策权给客户，解决问题的方向是:对用户有帮助的,对方说的不一定能解决问题自己判断，别照单全收，而是给出建议'
-# _y = sess.run(y,feed_dict=predict_feed_fn(string))
-# print(_y)
-
-
-# string = '当外界不能按照主观意愿发展的时候，人就会产生一系列特殊的行为'
-# _y = sess.run(y,feed_dict=predict_feed_fn(string))
-# print(_y)
-
-# string = '前端工程化,应用生命周期各个阶段，组件化强制规范,文件组织结构与框架。'
-# _y = sess.run(y,feed_dict=predict_feed_fn(string))
-# print(_y)
+    
+    saver.save(sess, os.path.join(subCkptDirPath,'model.ckpt')) # 'ckpt/' + ckptDirName +'/model.ckpt'
+    print('保存成功')

@@ -11,24 +11,20 @@ def matU(shape=[num_units,attention_len], stddev=0.1, mean=0):
     with tf.variable_scope('attention', reuse=tf.AUTO_REUSE):
         return tf.get_variable('matU',initializer=initial)
 
-
 def queryW(shape=[attention_len], value=0.1):
     initial = tf.constant(value=value, shape=shape)
     with tf.variable_scope('attention', reuse=tf.AUTO_REUSE):
         return tf.get_variable('queryW',initializer=initial)
-
-    # return tf.Variable(initial)
 
 def queryV(shape=[attention_len,1], value=0.1):
     initial = tf.constant(value=value, shape=shape)
     with tf.variable_scope('attention', reuse=tf.AUTO_REUSE):
         return tf.get_variable('queryV',initializer=initial)
 
-    # return tf.Variable(initial)
 
 def encode(embedingPlaceholder):
     input_embed = tf.reshape(embedingPlaceholder,[1,-1,200])
-    with tf.variable_scope('encode'):
+    with tf.variable_scope('encode',reuse=tf.AUTO_REUSE):
         cell = tf.contrib.rnn.GRUCell(num_units=num_units)
         cell2 = tf.contrib.rnn.GRUCell(num_units=num_units)
         encoder = tf.contrib.rnn.MultiRNNCell([cell,cell2])
