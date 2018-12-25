@@ -41,7 +41,7 @@ def predict(categoryId,notes):
             _y = sess.run(y,feed_dict=predict_feed_fn(string))
             print(_y)
             if _y[0][1] > 0.75:
-                predictList.append({'id':note['id']})
+                predictList.append(note['id'])
         except Exception as e:
             print(e)
     return predictList    

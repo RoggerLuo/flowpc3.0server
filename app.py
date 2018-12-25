@@ -1,7 +1,7 @@
-from classify import classify,unclassify
-from category import query_categories,create_category,modify_category,delete_category,orderChange
-from note import create_note,modify_note,delete_note
-from notes import query_notes
+from dao.classify import classify,unclassify
+from dao.category import query_categories,create_category,modify_category,delete_category,orderChange
+from dao.note import create_note,modify_note,delete_note
+from dao.notes import query_notes
 from flask import Flask, request
 import flask_cors
 app = Flask(__name__, static_folder='static')

@@ -55,9 +55,6 @@ def getTrainingData(train_each_category):
 # def save(categoryId,idList):
 
 def train_each_category(categoryId,yes,no):
-    # print(len(yes))
-    # print(len(no))
-    # print('categoryId',categoryId)
     if len(yes) < 4:
         print(len(yes))
         return
@@ -65,6 +62,7 @@ def train_each_category(categoryId,yes,no):
     train(categoryId,yes,no,epoch)
     notes = get_uncategorized_notes()
     predictNotesIdList = predict(categoryId,notes)
+
     print(predictNotesIdList)
     # save(categoryId,predictNotesIdList)
     # 根据yes和no，打乱他们的顺序，随机训练 100*len(yes) 次

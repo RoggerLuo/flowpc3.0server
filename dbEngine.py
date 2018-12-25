@@ -1,9 +1,14 @@
 import mysql.connector
 import json
 
+outerConfig = {'host':'rorrc.3322.org','port':'6033','user':'root', 'password':'!@as56210', 'database':'flowpc3.0', 'use_unicode':True}
+synology = {'host':'172.17.0.1','port':'6033','user':'root', 'password':'!@as56210', 'database':'flowpc3.0', 'use_unicode':True}
+intraConfig = {'host':'192.168.1.4','port':'6033','user':'root', 'password':'!@as56210', 'database':'flowpc3.0', 'use_unicode':True}
+
 def run(callback):
-    # conn = mysql.connector.connect(host='172.17.0.1',port='6033',user='root', password='!@as56210', database='flowpc3.0', use_unicode=True)
-    conn = mysql.connector.connect(host='192.168.1.4',port='6033',user='root', password='!@as56210', database='flowpc3.0', use_unicode=True)
+    # conn = mysql.connector.connect(**synology)
+    # conn = mysql.connector.connect(**intraConfig)
+    conn = mysql.connector.connect(**outerConfig)
 
     cursor = conn.cursor()
     try:
@@ -26,10 +31,10 @@ def run(callback):
         cursor.close()
         conn.close()
 
-#host='192.168.1.4',
 def run_middleware(callback):
-    # conn = mysql.connector.connect(host='172.17.0.1',port='6033',user='root', password='!@as56210', database='flowpc3.0', use_unicode=True)
-    conn = mysql.connector.connect(host='192.168.1.4',port='6033',user='root', password='!@as56210', database='flowpc3.0', use_unicode=True)
+    # conn = mysql.connector.connect(**synology)
+    # conn = mysql.connector.connect(**intraConfig)
+    conn = mysql.connector.connect(**outerConfig)
 
     cursor = conn.cursor()
     try:
@@ -50,4 +55,3 @@ def run_middleware(callback):
         cursor.close()
         conn.close()
 
-#host='192.168.1.4',
