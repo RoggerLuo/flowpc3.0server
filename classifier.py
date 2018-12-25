@@ -5,7 +5,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__),'textCls'))
 import numpy as np
 import time
 from textCls.main import train,predict
-
+from dao.notes import get_categorized_notes,get_uncategorized_notes
+from dao.category import savePrediction
 def categorize_notes():
     notes = get_categorized_notes()
     categorized_notes = {}
@@ -30,7 +31,7 @@ def getTrainingData(train_each_category):
         print('cate_yes',cate_yes)
         train_each_category(cate_yes,yes,no)
 
-# def save(categoryId,idList):
+#  savePrediction(categoryId,idList):
 
 def train_each_category(categoryId,yes,no):
     if len(yes) < 4:

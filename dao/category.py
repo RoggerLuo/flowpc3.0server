@@ -1,5 +1,6 @@
 from dbEngine import run
 import numpy as np
+import json
 def orderChange(category_id,order):
     def callback(conn,cursor):
         cursor.execute('UPDATE category set order_number = %s where id = %s', [order, category_id])
@@ -39,3 +40,10 @@ def delete_category(category_id):
     return run(callback)
 
 
+def savePrediction(category_id,noteIds):
+    def callback(conn,cursor):
+        cursor.execute('UPDATE category set prediction = %s where id = %s', [
+            json.dumps(noteIds), category_id])
+        conn.commit()
+        return 'success'
+    return run(callback)
