@@ -16,7 +16,7 @@
             "name": "train",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/classifier/test.py",
+            "program": "${workspaceFolder}/classifier.py",
             "console": "integratedTerminal"
         }
 

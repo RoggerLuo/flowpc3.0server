@@ -7,8 +7,8 @@ intraConfig = {'host':'192.168.1.4','port':'6033','user':'root', 'password':'!@a
 
 def run(callback):
     # conn = mysql.connector.connect(**synology)
-    # conn = mysql.connector.connect(**intraConfig)
-    conn = mysql.connector.connect(**outerConfig)
+    conn = mysql.connector.connect(**intraConfig)
+    # conn = mysql.connector.connect(**outerConfig)
 
     cursor = conn.cursor()
     try:
@@ -33,8 +33,8 @@ def run(callback):
 
 def run_middleware(callback):
     # conn = mysql.connector.connect(**synology)
-    # conn = mysql.connector.connect(**intraConfig)
-    conn = mysql.connector.connect(**outerConfig)
+    conn = mysql.connector.connect(**intraConfig)
+    # conn = mysql.connector.connect(**outerConfig)
 
     cursor = conn.cursor()
     try:
