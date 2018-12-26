@@ -71,7 +71,7 @@ def query_notes(categoryId,pageSize,pageNum):
                 if hNote[0] not in predictionList:
                     predictionNotes.append(hNote)
             # 判断predictionNotes中是否有 硬分类不属于这个分类的 剔除
-            filterdNotes = list(filter(lambda x:x[2]==0 or x[2]==categoryId,predictionNotes))
+            filterdNotes = list(filter(lambda x:x[2]==0 or str(x[2])==categoryId,predictionNotes))
             # 加上分页
             notes = filterdNotes[(pageNum-1)*pageSize:pageNum*pageSize]
 
