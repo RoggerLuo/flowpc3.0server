@@ -51,6 +51,7 @@ def query_notes(categoryId,pageSize,pageNum):
                 )
             notes = cursor.fetchall()
         else:
+
             cursor.execute("SELECT * from category where id = %s",[categoryId])
             values = cursor.fetchall()
             prediction = values[0][2]
@@ -58,8 +59,21 @@ def query_notes(categoryId,pageSize,pageNum):
 
             cursor.execute("SELECT * from note where status=0")
             values = cursor.fetchall()
-            notesTotal = list(filter(lambda x:x[0] in predictionList,values))
-            notes = notesTotal[(pageNum-1)*pageSize:pageNum*pageSize]
+            predictionNotes = list(filter(lambda x:x[0] in predictionList,values))
+
+            cursor.execute(
+                "SELECT * from note where category=%s and status=0 Order By modify_time Desc limit %s,%s",
+                [categoryId,(pageNum-1)*pageSize,pageSize]
+            )
+            hardCateNotes = cursor.fetchall()
+            # 把硬分类的文章加上去, 并去重
+            for hNote in hardCateNotes:
+                if hNote[0] not in predictionList:
+                    predictionNotes.append(hNote)
+            # 判断predictionNotes中是否有 硬分类不属于这个分类的 剔除
+            filterdNotes = list(filter(lambda x:x[2]==0 or x[2]==categoryId,predictionNotes))
+            # 加上分页
+            notes = filterdNotes[(pageNum-1)*pageSize:pageNum*pageSize]
 
         # values = cursor.fetchall()
         columes = ['id','content','category','create_time','modify_time','status']
