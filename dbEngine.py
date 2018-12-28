@@ -39,13 +39,11 @@ def run_middleware(callback):
     cursor = conn.cursor()
     try:
         return callback(conn, cursor)
-         
     except mysql.connector.Error as e:
         message = 'mysql operation fails!{}'.format(e)
         print(message)
         obj = {'message':message,'hasErrors':True}
         return obj
-
     except BaseException as e:
         message = 'error!{}'.format(e)
         print(message)
