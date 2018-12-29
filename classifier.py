@@ -51,4 +51,4 @@ newCategorizedNotes = checkIfNeedTrain(1)
 if  len(newCategorizedNotes) > 20:
     main(newCategorizedNotes,train_each_category)
 else:
-    print('未到达训练标准')
+    print('training standard is not reached')

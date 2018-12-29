@@ -1,0 +1,6 @@
+/root/py3env/lib/python3.6/importlib/_bootstrap.py:219: RuntimeWarning: compiletime version 3.5 of module 'tensorflow.python.framework.fast_tensor_util' does not match runtime version 3.6
+  return f(*args, **kwds)
+Traceback (most recent call last):
+  File "classifier.py", line 54, in <module>
+    print('\u672a\u5230\u8fbe\u8bad\u7ec3\u6807\u51c6')
+UnicodeEncodeError: 'ascii' codec can't encode characters in position 0-6: ordinal not in range(128)

@@ -74,7 +74,7 @@ def train(categoryId,yes,no,epoch):
         flag = False
         loss,_ = sess.run([cross_entropy,train_op],feed_dict=feed_fn(string,flag)) # accuracy acc
         if i%100 == 0:
-            print('epoch:' + str(i) + '----反向训练----')
+            print('epoch:' + str(i) + '----neg train----')
             print('loss:',loss)
             print('----------------------------------------')
         
@@ -82,7 +82,7 @@ def train(categoryId,yes,no,epoch):
         flag = True
         loss,_ = sess.run([cross_entropy,train_op],feed_dict=feed_fn(string,flag)) # acc accuracy
         if i%100 == 0:
-            print('epoch:' + str(i) + '----正向训练----')
+            print('epoch:' + str(i) + '----pos train----')
             print('loss:',loss)
             print('----------------------------------------')
 
@@ -91,4 +91,4 @@ def train(categoryId,yes,no,epoch):
         os.makedirs(subCkptDirPath)
     
     saver.save(sess, os.path.join(subCkptDirPath,'model.ckpt')) # 'ckpt/' + ckptDirName +'/model.ckpt'
-    print('保存成功')
+    print('save success')
