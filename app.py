@@ -1,11 +1,17 @@
 from dao.classify import classify,unclassify
-from dao.category import query_categories,create_category,modify_category,delete_category,orderChange
+from dao.category import query_categories,create_category,modify_category,delete_category,orderChange,colorChange
 from dao.note import create_note,modify_note,delete_note
 from dao.notes import query_notes
 from flask import Flask, request
 import flask_cors
 app = Flask(__name__, static_folder='static')
 flask_cors.CORS(app, supports_credentials=True)
+
+@app.route('/changeColor', methods=['POST'])
+def changeColor():
+    category_id = request.form['categoryId']
+    color = request.form['color']
+    return colorChange(category_id,color)
 
 @app.route('/classify/<note_id>/<cate_id>', methods=['GET'])
 def _classify(note_id,cate_id):

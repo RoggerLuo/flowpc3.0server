@@ -1,6 +1,13 @@
 from dbEngine import run
 import numpy as np
 import json
+def colorChange(category_id,color):
+    def callback(conn,cursor):
+        cursor.execute('UPDATE category set color = %s where id = %s', [color, category_id])
+        conn.commit()
+        return 'success'
+    return run(callback)
+
 def orderChange(category_id,order):
     def callback(conn,cursor):
         cursor.execute('UPDATE category set order_number = %s where id = %s', [order, category_id])
@@ -10,9 +17,9 @@ def orderChange(category_id,order):
 
 def query_categories():
     def callback(conn,cursor):
-        cursor.execute("SELECT * from category order by order_number desc")
+        cursor.execute("select * from category order by order_number desc")
         values = cursor.fetchall()
-        columes = ['id','name','prediction','order_number']
+        columes = ['id','name','prediction','order_number','color']
         return [dict(zip(columes,value)) for value in values]
     return run(callback)
 
@@ -38,7 +45,6 @@ def delete_category(category_id):
         conn.commit()
         return 'success'
     return run(callback)
-
 
 def savePrediction(category_id,noteIds):
     def callback(conn,cursor):
