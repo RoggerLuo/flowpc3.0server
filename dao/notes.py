@@ -3,10 +3,16 @@ from dbEngine import run,run_middleware
 import time
 import json
 
-def checkIfNeedTrain(hours):
-    timeRange = time.time() - 60*60*hours
+def mark_training_notes(notes):
     def callback(conn,cursor):
-        cursor.execute("select * from note where category!=0 and status=0 and create_time > %s",[timeRange])
+        for note in notes:
+            cursor.execute('UPDATE note set training_mark=%s where id = %s', [1, note['id']])
+            conn.commit()
+    return run_middleware(callback)
+
+def checkIfNeedTrain():
+    def callback(conn,cursor):
+        cursor.execute("select * from note where training_mark=0 and category!=0")
         values = cursor.fetchall()
         columns = ['id','content','category','create_time','modify_time','status']
         return [dict(zip(columns,value)) for value in values]

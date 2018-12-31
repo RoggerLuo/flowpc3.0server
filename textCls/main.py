@@ -68,7 +68,6 @@ def train(categoryId,yes,no,epoch):
 
     if exists(subCkptDirPath):
         ckpt = tf.train.get_checkpoint_state(subCkptDirPath)
-        # saver = tf.train.import_meta_graph(os.path.join(subCkptDirPath,'model.ckpt.meta'))
         saver.restore(sess, ckpt.model_checkpoint_path)
         print('Restore from', ckpt.model_checkpoint_path)
 

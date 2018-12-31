@@ -4,7 +4,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__),'textCls'))
 # import numpy as np
 import time
 from textCls.main import train,predict
-from dao.notes import get_categorized_notes,get_uncategorized_notes,checkIfNeedTrain
+from dao.notes import get_categorized_notes,get_uncategorized_notes,checkIfNeedTrain,mark_training_notes
 from dao.category import savePrediction
 minimum_threshold = 10 # 开始训练某个category的所需文章的最小数量
 how_many_epoch_each_note =  20
@@ -36,12 +36,13 @@ def main(newCategorizedNotes,train_each_category):
 
 def train_each_category(categoryId,yes,no):
     if len(yes) < minimum_threshold: # 开始训练某个category的所需文章的最小数量
+        print('note num for category:',categoryId,'too small,skip')
         return
     epoch = len(yes)*how_many_epoch_each_note
     train(categoryId,yes,no,epoch)
     print('predict uncategorized notes')
     print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
-
+    mark_training_notes(yes)
     notes = get_uncategorized_notes()
     predictNotesIdList = predict(categoryId,notes)
     savePrediction(categoryId,predictNotesIdList)
@@ -49,7 +50,7 @@ def train_each_category(categoryId,yes,no):
     # print(predictNotesIdList)
     # 加入打印训练各个阶段的时间
 
-newCategorizedNotes = checkIfNeedTrain(14)
+newCategorizedNotes = checkIfNeedTrain()
 main(newCategorizedNotes,train_each_category)
 
 # print('start runing')
