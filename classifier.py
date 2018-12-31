@@ -47,8 +47,12 @@ def train_each_category(categoryId,yes,no):
     print(time.time())
     # 加入打印训练各个阶段的时间
 
-newCategorizedNotes = checkIfNeedTrain(1)
-if  len(newCategorizedNotes) > 20:
-    main(newCategorizedNotes,train_each_category)
-else:
-    print('training standard is not reached')
+newCategorizedNotes = checkIfNeedTrain(14)
+# 这里还有问题
+
+# if  len(newCategorizedNotes) > 20:
+#     main(newCategorizedNotes,train_each_category)
+# else:
+#     print('training standard is not reached')
+
+main(newCategorizedNotes,train_each_category)

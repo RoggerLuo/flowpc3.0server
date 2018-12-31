@@ -8,6 +8,7 @@ import os
 from tensorflow.contrib import layers
 from random import choice
 def optimizer(loss):    
+    # with tf.variable_scope('attention', reuse=tf.AUTO_REUSE):
     return layers.optimize_loss(
         loss, tf.train.get_global_step(),
         optimizer='Adam',
@@ -47,6 +48,7 @@ def predict(categoryId,notes):
     return predictList    
 
 def train(categoryId,yes,no,epoch):
+    tf.reset_default_graph() # 运行两次就报错，第一次读取ckpt参数没事，第二次就有事了
     embedingPlaceholder,y = getTrainingModel()
     y_labelPlaceholder,cross_entropy,accuracy = getLoss(y)
     train_op = optimizer(cross_entropy)
@@ -66,6 +68,7 @@ def train(categoryId,yes,no,epoch):
 
     if exists(subCkptDirPath):
         ckpt = tf.train.get_checkpoint_state(subCkptDirPath)
+        # saver = tf.train.import_meta_graph(os.path.join(subCkptDirPath,'model.ckpt.meta'))
         saver.restore(sess, ckpt.model_checkpoint_path)
         print('Restore from', ckpt.model_checkpoint_path)
 
