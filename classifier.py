@@ -50,13 +50,13 @@ def train_each_category(categoryId,yes,no):
     # print(predictNotesIdList)
     # 加入打印训练各个阶段的时间
 
-newCategorizedNotes = checkIfNeedTrain()
-main(newCategorizedNotes,train_each_category)
+# newCategorizedNotes = checkIfNeedTrain()
+# main(newCategorizedNotes,train_each_category)
 
 # print('start runing')
 # print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
-# newCategorizedNotes = checkIfNeedTrain(1)
-# if  len(newCategorizedNotes) > 20:
-#     main(newCategorizedNotes,train_each_category)
-# else:
-#     print('training standard is not reached')
+newCategorizedNotes = checkIfNeedTrain()
+if  len(newCategorizedNotes) > 20:
+    main(newCategorizedNotes,train_each_category)
+else:
+    print('training standard is not reached')
