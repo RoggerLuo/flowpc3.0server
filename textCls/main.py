@@ -94,4 +94,4 @@ def train(categoryId,yes,no,epoch):
         os.makedirs(subCkptDirPath)
     
     saver.save(sess, os.path.join(subCkptDirPath,'model.ckpt')) # 'ckpt/' + ckptDirName +'/model.ckpt'
-    print('save success')
+    print('save ckpt success')
