@@ -31,22 +31,25 @@ def main(newCategorizedNotes,train_each_category):
             if cate_no != cate_yes:
                 for note in notes[cate_no]:
                     no.append(note)
-        print('cate_yes',cate_yes)
+        print('current category id:',cate_yes)
         train_each_category(cate_yes,yes,no)
 
 def train_each_category(categoryId,yes,no):
-    if len(yes) < minimum_threshold:
-   # 开始训练某个category的所需文章的最小数量      print(len(yes))
+    if len(yes) < minimum_threshold: # 开始训练某个category的所需文章的最小数量
         return
     epoch = len(yes)*how_many_epoch_each_note
     train(categoryId,yes,no,epoch)
+    print('predict uncategorized notes')
+    print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
+
     notes = get_uncategorized_notes()
     predictNotesIdList = predict(categoryId,notes)
     savePrediction(categoryId,predictNotesIdList)
-    print(predictNotesIdList)
-    print(time.time())
+    print('save finished')
+    # print(predictNotesIdList)
     # 加入打印训练各个阶段的时间
-
+print('start runing')
+print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
 newCategorizedNotes = checkIfNeedTrain(1)
 if  len(newCategorizedNotes) > 20:
     main(newCategorizedNotes,train_each_category)
