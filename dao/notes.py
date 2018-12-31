@@ -18,9 +18,10 @@ def checkIfNeedTrain():
         return [dict(zip(columns,value)) for value in values]
     return run_middleware(callback)
 
-def get_uncategorized_notes():
+def get_uncategorized_notes(sec):
     def callback(conn,cursor):
-        cursor.execute("select * from note where category=0 and status=0")
+        line = time.time() - sec
+        cursor.execute("select * from note where category=0 and status=0 and create_time > %s",[line])
         values = cursor.fetchall()
         columns = ['id','content','category','create_time','modify_time','status']
         return [dict(zip(columns,value)) for value in values]

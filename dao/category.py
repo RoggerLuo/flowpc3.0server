@@ -1,4 +1,4 @@
-from dbEngine import run
+from dbEngine import run,run_middleware
 import numpy as np
 import json
 def colorChange(category_id,color):
@@ -15,6 +15,12 @@ def orderChange(category_id,order):
         return 'success'
     return run(callback)
 
+def get_category():
+    def callback(conn,cursor):
+        cursor.execute("select * from category order by order_number desc")
+        return cursor.fetchall()
+    return run_middleware(callback)
+
 def query_categories():
     def callback(conn,cursor):
         cursor.execute("select * from category order by order_number desc")
@@ -25,7 +31,7 @@ def query_categories():
 
 def create_category(name):
     def callback(conn,cursor):
-        cursor.execute('INSERT into category (name) values (%s)', [name])
+        cursor.execute('insert into category (name) values (%s)', [name])
         insert_id = cursor.lastrowid # 一定要在conn.commit()之前，否则会返回0
         conn.commit()
         return {'insert_id':insert_id}

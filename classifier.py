@@ -4,8 +4,9 @@ sys.path.append(os.path.join(os.path.dirname(__file__),'textCls'))
 # import numpy as np
 import time
 from textCls.main import train,predict
+from dao.sysState import isTraining,startTrain,endTrain
 from dao.notes import get_categorized_notes,get_uncategorized_notes,checkIfNeedTrain,mark_training_notes
-from dao.category import savePrediction
+from dao.category import savePrediction,get_category
 minimum_threshold = 10 # 开始训练某个category的所需文章的最小数量
 how_many_epoch_each_note =  20
 def __categorize_notes(notes):
@@ -43,20 +44,34 @@ def train_each_category(categoryId,yes,no):
     print('predict uncategorized notes')
     print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
     mark_training_notes(yes)
-    notes = get_uncategorized_notes()
-    predictNotesIdList = predict(categoryId,notes)
-    savePrediction(categoryId,predictNotesIdList)
-    print('save finished')
-    # print(predictNotesIdList)
-    # 加入打印训练各个阶段的时间
 
-# newCategorizedNotes = checkIfNeedTrain()
-# main(newCategorizedNotes,train_each_category)
+def predict_uncategorized_notes(hour):
+    notes = get_uncategorized_notes(hour)
+    if len(notes) > 0:
+        for cate in get_category():
+            categoryId = cate[0]
+            predictNotesIdList = predict(categoryId,notes)
+            savePrediction(categoryId,predictNotesIdList)
+        print('save finished')
+    else:
+        print('too less notes to predict')
 
-# print('start runing')
-# print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
-newCategorizedNotes = checkIfNeedTrain()
-if  len(newCategorizedNotes) > 20:
-    main(newCategorizedNotes,train_each_category)
+def main2():
+    print('start runing')
+    print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
+    newCategorizedNotes = checkIfNeedTrain()
+    if  len(newCategorizedNotes) > 20:
+        main(newCategorizedNotes,train_each_category)
+    else:
+        print('training standard is not reached')
+
+if isTraining() == False:
+    print('start training')
+    startTrain()
+    main2()
+    endTrain()
+    print('end training')
 else:
-    print('training standard is not reached')
+    print('it is training now, action drop')
+
+predict_uncategorized_notes(5*60)
