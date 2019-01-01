@@ -45,12 +45,12 @@ def train_each_category(categoryId,yes,no):
         return
     epoch = len(yes)*how_many_epoch_each_note
     train(categoryId,yes,no,epoch)
-    print('predict uncategorized notes')
+    print('category training end for categoryId:',categoryId)
     print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
     mark_training_notes(yes)
 
-def predict_uncategorized_notes(hour):
-    notes = get_uncategorized_notes(hour)
+def predict_uncategorized_notes(sec):
+    notes = get_uncategorized_notes(sec)
     if len(notes) > 0:
         for cate in get_category():
             categoryId = cate[0]
