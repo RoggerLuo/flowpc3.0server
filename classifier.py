@@ -7,8 +7,12 @@ from textCls.main import train,predict
 from dao.sysState import isTraining,startTrain,endTrain
 from dao.notes import get_categorized_notes,get_uncategorized_notes,checkIfNeedTrain,mark_training_notes
 from dao.category import savePrediction,get_category
+
 minimum_threshold = 10 # 开始训练某个category的所需文章的最小数量
 how_many_epoch_each_note =  20
+predict_period_in_sec = 5*60
+newCategorizedNotesNum_for_startTrain=20
+
 def __categorize_notes(notes):
     categorized_notes = {}
     for note in notes:
@@ -52,7 +56,7 @@ def predict_uncategorized_notes(hour):
             categoryId = cate[0]
             predictNotesIdList = predict(categoryId,notes)
             savePrediction(categoryId,predictNotesIdList)
-        print('save finished')
+        print('predict results save finished')
     else:
         print('too less notes to predict')
 
@@ -60,7 +64,7 @@ def main2():
     print('start runing')
     print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
     newCategorizedNotes = checkIfNeedTrain()
-    if  len(newCategorizedNotes) > 20:
+    if  len(newCategorizedNotes) > newCategorizedNotesNum_for_startTrain:
         main(newCategorizedNotes,train_each_category)
     else:
         print('training standard is not reached')
@@ -74,4 +78,4 @@ if isTraining() == False:
 else:
     print('it is training now, action drop')
 
-predict_uncategorized_notes(5*60)
+predict_uncategorized_notes(predict_period_in_sec)
