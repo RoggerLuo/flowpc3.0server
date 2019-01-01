@@ -55,7 +55,7 @@ def delete_category(category_id):
 def savePrediction(category_id,noteIds,mode='replace'):
     def callback(conn,cursor):
         if mode == 'append':
-            cursor.execute("select * from category where id=%s",category_id)
+            cursor.execute("select * from category where id=%s",[category_id])
             values = cursor.fetchall()
             newIds = json.loads(values[0][2]) + noteIds
 
