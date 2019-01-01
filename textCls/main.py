@@ -16,6 +16,7 @@ def optimizer(loss):
     )
 
 def predict(categoryId,notes):
+    tf.reset_default_graph()
     embedingPlaceholder,y = getPredictionModel()
     def predict_feed_fn(string):
         x = str2embed(string)
@@ -34,7 +35,8 @@ def predict(categoryId,notes):
         ckpt = tf.train.get_checkpoint_state(subCkptDirPath)
         saver.restore(sess, ckpt.model_checkpoint_path)
         print('Restore from', ckpt.model_checkpoint_path)
-
+    else:
+        return []
     predictList = []
     for note in notes:
         try:

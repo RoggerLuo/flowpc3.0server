@@ -57,9 +57,12 @@ def predict_uncategorized_notes(sec): # 新写的notes
     notes = get_uncategorized_notes(sec)
     if len(notes) > 0:
         for cate in get_category():
+            print('---start predict category:',cate[0])
             categoryId = cate[0]
             predictNotesIdList = predict(categoryId,notes)
             savePrediction(categoryId,predictNotesIdList,'append')
+            print('--- predict end ---')
+
         print('predict results save finished')
     else:
         print('too less notes to predict')
