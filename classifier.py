@@ -51,7 +51,7 @@ def train_each_category(categoryId,yes,no):
 
     notes = get_uncategorized_notes(60*60*24*30*12*2)
     predictNotesIdList = predict(categoryId,notes)
-    savePrediction(categoryId,predictNotesIdList)
+    savePrediction(categoryId,predictNotesIdList,'replace')
 
 def predict_uncategorized_notes(sec): # 新写的notes
     notes = get_uncategorized_notes(sec)
@@ -59,7 +59,7 @@ def predict_uncategorized_notes(sec): # 新写的notes
         for cate in get_category():
             categoryId = cate[0]
             predictNotesIdList = predict(categoryId,notes)
-            savePrediction(categoryId,predictNotesIdList)
+            savePrediction(categoryId,predictNotesIdList,'append')
         print('predict results save finished')
     else:
         print('too less notes to predict')

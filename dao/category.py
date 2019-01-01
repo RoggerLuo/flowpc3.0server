@@ -52,10 +52,17 @@ def delete_category(category_id):
         return 'success'
     return run(callback)
 
-def savePrediction(category_id,noteIds):
+def savePrediction(category_id,noteIds,mode='replace'):
     def callback(conn,cursor):
-        cursor.execute('UPDATE category set prediction = %s where id = %s', [
-            json.dumps(noteIds), category_id])
-        conn.commit()
+        if mode == 'append':
+            cursor.execute("select * from category where id=%s",category_id)
+            values = cursor.fetchall()
+            newIds = json.loads(values[0][2]) + noteIds
+
+            cursor.execute('UPDATE category set prediction = %s where id = %s', [json.dumps(newIds), category_id])
+            conn.commit()
+        else:
+            cursor.execute('UPDATE category set prediction = %s where id = %s', [json.dumps(noteIds), category_id])
+            conn.commit()
         return 'success'
     return run(callback)
