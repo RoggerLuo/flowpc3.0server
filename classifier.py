@@ -23,14 +23,14 @@ def main(newCategorizedNotes,train_each_category):
     newCategorizedNotes = __categorize_notes(newCategorizedNotes)
     categories = list(newCategorizedNotes.keys())
 
-    notes = __categorize_notes(get_categorized_notes())
-    allCategories = list(notes.keys())
+    notes_catd = __categorize_notes(get_categorized_notes())
+    allCategories = list(notes_catd.keys())
     for cate_yes in categories:
-        yes = notes[cate_yes]
+        yes = notes_catd[cate_yes]
         no = []
         for cate_no in allCategories:
             if cate_no != cate_yes:
-                for note in notes[cate_no]:
+                for note in notes_catd[cate_no]:
                     no.append(note)
         print('current category id:',cate_yes)
         train_each_category(cate_yes,yes,no)
