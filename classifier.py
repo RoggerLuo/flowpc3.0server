@@ -11,7 +11,7 @@ from dao.category import savePrediction,get_category
 minimum_threshold = 10 # 开始训练某个category的所需文章的最小数量
 how_many_epoch_each_note =  20
 predict_period_in_sec = 5*60
-newCategorizedNotesNum_for_startTrain = 20
+newCategorizedNotesNum_for_startTrain = 10
 
 def __categorize_notes(notes):
     categorized_notes = {}
@@ -80,9 +80,9 @@ if isTraining() == False:
     print('start training')
     startTrain()
     main2()
+    predict_uncategorized_notes(predict_period_in_sec)
     endTrain()
     print('end training')
 else:
     print('it is training now, action drop')
 
-predict_uncategorized_notes(predict_period_in_sec)
