@@ -10,7 +10,7 @@ from dao.category import savePrediction,get_category
 
 minimum_threshold = 10 # 开始训练某个category的所需文章的最小数量
 how_many_epoch_each_note =  20
-predict_period_in_sec = 20*60
+predict_period_in_sec = 5*60
 newCategorizedNotesNum_for_startTrain = 20
 
 def __categorize_notes(notes):
