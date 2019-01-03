@@ -9,7 +9,7 @@ from dao.notes import get_categorized_notes,get_uncategorized_notes,checkIfNeedT
 from dao.category import savePrediction,get_category
 from corpus.corpusApi import getRandomNegSamples
 minimum_threshold = 10 # 开始训练某个category的所需文章的最小数量
-how_many_epoch_each_note = 40
+how_many_epoch_each_note = 50
 predict_period_in_sec = 5*60
 newCategorizedNotesNum_for_startTrain = 10
 
