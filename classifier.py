@@ -38,8 +38,6 @@ def main(newCategorizedNotes,train_each_category):
                 for note in notes_catd[cate_no]:
                     no.append(note)
         print('current category id:',cate_yes)
-        def train(categoryId,yes,no,epoch):
-
         # string = choice(no)['content']
         no = no + commonNegNotes
         train_each_category(cate_yes,yes,no)
