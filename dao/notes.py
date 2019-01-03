@@ -29,7 +29,7 @@ def get_uncategorized_notes(sec):
 
 def get_categorized_notes():
     def callback(conn,cursor):
-        cursor.execute("select * from note where category!=0 and status=0")
+        cursor.execute("select * from note where category!=0 order by modify_time desc limit 150")
         values = cursor.fetchall()
         columns = ['id','content','category','create_time','modify_time','status']
         return [dict(zip(columns,value)) for value in values]

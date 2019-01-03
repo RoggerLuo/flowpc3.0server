@@ -7,9 +7,9 @@ from textCls.main import train,predict
 from dao.sysState import isTraining,startTrain,endTrain
 from dao.notes import get_categorized_notes,get_uncategorized_notes,checkIfNeedTrain,mark_training_notes
 from dao.category import savePrediction,get_category
-
+from corpus.corpusApi import getRandomNegSamples
 minimum_threshold = 10 # 开始训练某个category的所需文章的最小数量
-how_many_epoch_each_note =  20
+how_many_epoch_each_note = 40
 predict_period_in_sec = 5*60
 newCategorizedNotesNum_for_startTrain = 10
 
@@ -24,6 +24,7 @@ def __categorize_notes(notes):
     return categorized_notes
 
 def main(newCategorizedNotes,train_each_category):
+    commonNegNotes = getRandomNegSamples()
     newCategorizedNotes = __categorize_notes(newCategorizedNotes)
     categories = list(newCategorizedNotes.keys())
 
@@ -37,6 +38,10 @@ def main(newCategorizedNotes,train_each_category):
                 for note in notes_catd[cate_no]:
                     no.append(note)
         print('current category id:',cate_yes)
+        def train(categoryId,yes,no,epoch):
+
+        # string = choice(no)['content']
+        no = no + commonNegNotes
         train_each_category(cate_yes,yes,no)
 
 def train_each_category(categoryId,yes,no):
