@@ -75,6 +75,12 @@ def train(categoryId,yes,no,epoch):
 
     for i in range(epoch):
         string = choice(no)['content']
+        if string == '':
+            string = choice(no)['content']
+        if string == '':
+            string = choice(no)['content']
+        if string == '':
+            continue
         flag = False
         loss,_ = sess.run([cross_entropy,train_op],feed_dict=feed_fn(string,flag)) # accuracy acc
         if i%100 == 0:
