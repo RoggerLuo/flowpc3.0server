@@ -12,18 +12,18 @@ sports = os.path.join(os.path.dirname(__file__),"sports.txt")
 def getRandomNegSamples():
     data = []
     notes = []
-    with open(culture,'r') as f: 
+    with open(culture,'rb') as f: 
         data = data + f.readlines()
-    with open(financial,'r') as f: 
+    with open(financial,'rb') as f: 
         data = data + f.readlines()
-    with open(military,'r') as f: 
+    with open(military,'rb') as f: 
         data = data + f.readlines()
-    with open(sports,'r') as f: 
+    with open(sports,'rb') as f: 
         data = data + f.readlines()
     for i in range(1000):
         content = choice(data)
         try:
-            content = content[60:]
+            content = content.decode('utf-8')[60:]
             le = len(content)
             start = random.randint(0,le)
             content = content[start:start+random.randint(60,200)]
