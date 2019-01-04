@@ -3,15 +3,19 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__),'textCls'))
 # import numpy as np
 import time
+import json
 from textCls.main import train,predict
 from dao.sysState import isTraining,startTrain,endTrain
 from dao.notes import get_categorized_notes,get_uncategorized_notes,checkIfNeedTrain,mark_training_notes
+from dao.note import get_note,id2note
 from dao.category import savePrediction,get_category
 from corpus.corpusApi import getRandomNegSamples
 minimum_threshold = 10 # 开始训练某个category的所需文章的最小数量
 how_many_epoch_each_note = 50
 predict_period_in_sec = 5*60
 newCategorizedNotesNum_for_startTrain = 10
+commonNegNotes = getRandomNegSamples()
+
 
 def __categorize_notes(notes):
     categorized_notes = {}
@@ -79,13 +83,26 @@ def main2():
     else:
         print('training standard is not reached')
 
-if isTraining() == False:
-    print('start training')
-    startTrain()
-    main2()
-    predict_uncategorized_notes(predict_period_in_sec)
-    endTrain()
-    print('end training')
-else:
-    print('it is training now, action drop')
+def similarAlg(noteId):
+    note = get_note(noteId) # get note content dynamic
+    yes = [{'content':note}]
+    no = commonNegNotes
+    # train a model , pos 1, neg 200
+    epoch = 200
+    train('temp',yes,no,epoch)
+    
+    notes = get_uncategorized_notes(60*60*24*300)
+    predictNotesIdList = predict('temp',notes)    
+    return json.dumps(id2note(predictNotesIdList))
+
+if __name__ == "__main__":
+    if isTraining() == False:
+        print('start training')
+        startTrain()
+        main2()
+        predict_uncategorized_notes(predict_period_in_sec)
+        endTrain()
+        print('end training')
+    else:
+        print('it is training now, action drop')
 

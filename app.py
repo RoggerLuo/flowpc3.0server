@@ -4,8 +4,13 @@ from dao.note import create_note,modify_note,delete_note
 from dao.notes import query_notes
 from flask import Flask, request
 import flask_cors
+from classifier import similarAlg
 app = Flask(__name__, static_folder='static')
 flask_cors.CORS(app, supports_credentials=True)
+
+@app.route('/getSimilar/<note_id>', methods=['GET'])
+def getSimilar(note_id):
+    return similarAlg(note_id)
 
 @app.route('/changeColor', methods=['POST'])
 def changeColor():

@@ -7,6 +7,7 @@ from os.path import exists
 import os
 from tensorflow.contrib import layers
 from random import choice
+
 def optimizer(loss):    
     # with tf.variable_scope('attention', reuse=tf.AUTO_REUSE):
     return layers.optimize_loss(
@@ -102,3 +103,4 @@ def train(categoryId,yes,no,epoch):
     
     saver.save(sess, os.path.join(subCkptDirPath,'model.ckpt')) # 'ckpt/' + ckptDirName +'/model.ckpt'
     print('save ckpt success')
+

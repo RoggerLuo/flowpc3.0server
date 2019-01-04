@@ -1,4 +1,4 @@
-from dbEngine import run
+from dbEngine import run,run_middleware
 import numpy as np
 import time
 def create_note(content,category_id):
@@ -28,6 +28,20 @@ def delete_note(note_id):
         return 'success'
     return run(callback)
 
+def get_note(noteId):
+    def callback(conn,cursor):
+        cursor.execute("select * from note where id=%s",[noteId])
+        value = cursor.fetchall()[0]
+        return value[1]
+    return run_middleware(callback)
+
+def id2note(predictionList):
+    def callback(conn,cursor):
+        cursor.execute("SELECT * from note where status=0")
+        values = cursor.fetchall()
+        predictionNotes = list(filter(lambda x:x[0] in predictionList,values))
+        return predictionNotes
+    return run_middleware(callback)
 
 
 
