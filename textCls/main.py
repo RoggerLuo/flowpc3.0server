@@ -45,12 +45,18 @@ def predict(categoryId,notes):
             _y = sess.run(y,feed_dict=predict_feed_fn(string))
             print(_y)
             if _y[0][1] > 0.75:
-                predictList.append(note['id'])
+                predictList.append({'id':note['id'],'score':_y[0][1]})
+            # predictList.append({'id':note['id'],'score':_y[0][1]})
+
         except Exception as e:
             print(e)
+
+    predictList = sorted(predictList, key=lambda x: -x['score'])
+    predictList = list(map(lambda x:x['id'],predictList))
+
     return predictList    
 
-def train(categoryId,yes,no,epoch):
+def train(categoryId,yes,no,epoch,negSample_times=5):
     tf.reset_default_graph() # 运行两次就报错，第一次读取ckpt参数没事，第二次就有事了
     embedingPlaceholder,y = getTrainingModel()
     y_labelPlaceholder,cross_entropy,accuracy = getLoss(y)
@@ -75,21 +81,24 @@ def train(categoryId,yes,no,epoch):
         print('Restore from', ckpt.model_checkpoint_path)
 
     for i in range(epoch):
-        string = choice(no)['content']
-        if string == '':
+        for j in range(negSample_times):
             string = choice(no)['content']
-        if string == '':
-            string = choice(no)['content']
-        if string == '':
-            continue
-        flag = False
-        loss,_ = sess.run([cross_entropy,train_op],feed_dict=feed_fn(string,flag)) # accuracy acc
-        if i%100 == 0:
-            print('epoch:' + str(i) + '----neg train----')
-            print('loss:',loss)
-            print('----------------------------------------')
+            if string == '':
+                string = choice(no)['content']
+            if string == '':
+                continue
+            flag = False
+            loss,_ = sess.run([cross_entropy,train_op],feed_dict=feed_fn(string,flag)) # accuracy acc
+            if i%100 == 0:
+                print('epoch:' + str(i) + '----neg train----')
+                print('loss:',loss)
+                print('----------------------------------------')
         
         string = choice(yes)['content']
+        if string == '':
+            string = choice(yes)['content']
+        if string == '':
+            continue
         flag = True
         loss,_ = sess.run([cross_entropy,train_op],feed_dict=feed_fn(string,flag)) # acc accuracy
         if i%100 == 0:

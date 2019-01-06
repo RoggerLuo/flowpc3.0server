@@ -86,12 +86,12 @@ def main2():
 def similarAlg(noteId):
     note = get_note(noteId) # get note content dynamic
     yes = [{'content':note}]
-    no = commonNegNotes
+    no =  get_uncategorized_notes(60*60*24*300) + get_categorized_notes()#commonNegNotes #
     # train a model , pos 1, neg 200
-    epoch = 200
-    train('temp',yes,no,epoch)
+    epoch = 20
+    train('temp',yes,no,epoch,2)
     
-    notes = get_uncategorized_notes(60*60*24*300)
+    notes = get_categorized_notes() + get_uncategorized_notes(60*60*24*300)
     predictNotesIdList = predict('temp',notes)    
     return json.dumps(id2note(predictNotesIdList))
 
