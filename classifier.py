@@ -10,12 +10,14 @@ from dao.notes import get_categorized_notes,get_uncategorized_notes,checkIfNeedT
 from dao.note import get_note,id2note
 from dao.category import savePrediction,get_category
 from corpus.corpusApi import getRandomNegSamples
+import jieba
+from dbEngine import run,run_middleware
+from dao.ignoreList import get_ignore_list
 minimum_threshold = 10 # 开始训练某个category的所需文章的最小数量
 how_many_epoch_each_note = 50
 predict_period_in_sec = 5*60
 newCategorizedNotesNum_for_startTrain = 10
 commonNegNotes = getRandomNegSamples()
-
 
 def __categorize_notes(notes):
     categorized_notes = {}
@@ -84,16 +86,32 @@ def main2():
         print('training standard is not reached')
 
 def similarAlg(noteId):
-    note = get_note(noteId) # get note content dynamic
-    yes = [{'content':note}]
-    no =  get_uncategorized_notes(60*60*24*300) + get_categorized_notes()#commonNegNotes #
-    # train a model , pos 1, neg 200
-    epoch = 20
-    train('temp',yes,no,epoch,2)
+    content = get_note(noteId) # get note content dynamic
     
+    selected_note_word_list = jieba.lcut(content)
+    ignore_list = get_ignore_list()
+    #return ignore_list
+
+    selected_note_word_list = list(filter(lambda x:x not in ignore_list,selected_note_word_list))
+        
     notes = get_categorized_notes() + get_uncategorized_notes(60*60*24*300)
-    predictNotesIdList = predict('temp',notes)    
-    return json.dumps(id2note(predictNotesIdList))
+    returnList = []
+    for note in notes:
+        count = 0
+        current_word_list = jieba.lcut(note['content'])
+        match_list = []
+        for word in current_word_list:
+            if word in selected_note_word_list:  # 如果和当前文章有相同的词，则记录
+                if word not in match_list: # 去重
+                    count += 1
+                    match_list.append(word)
+        if count > 0 :
+            note['count'] = count
+            note['match_list'] = match_list
+            returnList.append(note)
+    
+    returnList = sorted(returnList, key=lambda x: -len(x['match_list']))
+    return json.dumps(returnList) 
 
 if __name__ == "__main__":
     if isTraining() == False:
