@@ -81,10 +81,13 @@ def train(categoryId,yes,no,epoch,negSample_times=5):
         print('Restore from', ckpt.model_checkpoint_path)
 
     for i in range(epoch):
-        for j in range(negSample_times):
-            string = choice(no)['content']
-            if string == '':
-                string = choice(no)['content']
+        random.shuffle(no)
+        for no_note in no:
+            string = no_note['content']
+        # for j in range(negSample_times):
+            # string = choice(no)['content']
+            # if string == '':
+            #     string = choice(no)['content']
             if string == '':
                 continue
             flag = False

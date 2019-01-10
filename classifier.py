@@ -15,7 +15,7 @@ from dbEngine import run,run_middleware
 from dao.ignoreList import get_ignore_list
 
 minimum_threshold = 3 # 开始训练某个category的所需文章的最小数量
-how_many_epoch_each_note = 40
+how_many_epoch_each_note = 10
 predict_period_in_sec = 5*60
 newCategorizedNotesNum_for_startTrain = 10
 commonNegNotes = getRandomNegSamples()
@@ -31,7 +31,7 @@ def __categorize_notes(notes):
     return categorized_notes
 
 def main(newCategorizedNotes,train_each_category):
-    commonNegNotes = getRandomNegSamples()
+    # commonNegNotes = getRandomNegSamples()
     newCategorizedNotes = __categorize_notes(newCategorizedNotes)
     categories = list(newCategorizedNotes.keys())
 
@@ -46,7 +46,7 @@ def main(newCategorizedNotes,train_each_category):
                     no.append(note)
         print('current category id:',cate_yes)
         # string = choice(no)['content']
-        no = no + commonNegNotes
+        # no = no + commonNegNotes
         train_each_category(cate_yes,yes,no)
 
 def train_each_category(categoryId,yes,no):
@@ -54,7 +54,7 @@ def train_each_category(categoryId,yes,no):
         print('note num for category:',categoryId,'too small,skip')
         return
     epoch = len(yes)*how_many_epoch_each_note
-    train(categoryId,yes,no,epoch)
+    train(categoryId,yes,no,epoch,negSample_times=1)
     print('category training end for categoryId:',categoryId)
     print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
     mark_training_notes(yes)
