@@ -89,7 +89,7 @@ def main2():
 def similarAlg(noteId):
     content = get_note(noteId) # get note content dynamic
     
-    selected_note_word_list = jieba.lcut(content)
+    selected_note_word_list = jieba.lcut_for_search(content)
     ignore_list = get_ignore_list()
     #return ignore_list
 
@@ -99,7 +99,7 @@ def similarAlg(noteId):
     returnList = []
     for note in notes:
         count = 0
-        current_word_list = jieba.lcut(note['content'])
+        current_word_list = jieba.lcut_for_search(note['content'])
         match_list = []
         for word in current_word_list:
             if word in selected_note_word_list:  # 如果和当前文章有相同的词，则记录
