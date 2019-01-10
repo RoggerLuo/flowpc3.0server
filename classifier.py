@@ -13,8 +13,9 @@ from corpus.corpusApi import getRandomNegSamples
 import jieba
 from dbEngine import run,run_middleware
 from dao.ignoreList import get_ignore_list
-minimum_threshold = 10 # 开始训练某个category的所需文章的最小数量
-how_many_epoch_each_note = 50
+
+minimum_threshold = 3 # 开始训练某个category的所需文章的最小数量
+how_many_epoch_each_note = 40
 predict_period_in_sec = 5*60
 newCategorizedNotesNum_for_startTrain = 10
 commonNegNotes = getRandomNegSamples()
