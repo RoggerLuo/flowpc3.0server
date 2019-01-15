@@ -1,5 +1,4 @@
 import tensorflow as tf
-import numpy as np
 from model import getTrainingModel,getPredictionModel
 from getLoss import getLoss
 from embed import str2embed
@@ -7,6 +6,12 @@ from os.path import exists
 import os
 from tensorflow.contrib import layers
 from random import choice
+import random
+import jieba
+import sys
+sys.path.append('..')
+from dao.ignoreList import get_ignore_list
+ignore_list = get_ignore_list()
 
 def optimizer(loss):    
     # with tf.variable_scope('attention', reuse=tf.AUTO_REUSE):
@@ -41,19 +46,22 @@ def predict(categoryId,notes):
     predictList = []
     for note in notes:
         try:
-            string = note['content']
-            _y = sess.run(y,feed_dict=predict_feed_fn(string))
+            content = note['content']
+            # 分词 + 过滤
+            word_list = jieba.lcut_for_search(content)
+            word_list = list(filter(lambda x:x not in ignore_list,word_list))
+            content = ' '.join(word_list)
+
+            _y = sess.run(y,feed_dict=predict_feed_fn(content))
             print(_y)
             if _y[0][1] > 0.75:
                 predictList.append({'id':note['id'],'score':_y[0][1]})
             # predictList.append({'id':note['id'],'score':_y[0][1]})
-
         except Exception as e:
             print(e)
 
     predictList = sorted(predictList, key=lambda x: -x['score'])
     predictList = list(map(lambda x:x['id'],predictList))
-
     return predictList    
 
 def train(categoryId,yes,no,epoch,negSample_times=5):
@@ -82,32 +90,39 @@ def train(categoryId,yes,no,epoch,negSample_times=5):
 
     for i in range(epoch):
         random.shuffle(no)
-        for no_note in no:
-            string = no_note['content']
-        # for j in range(negSample_times):
-            # string = choice(no)['content']
-            # if string == '':
-            #     string = choice(no)['content']
-            if string == '':
+        random.shuffle(yes)
+        for idx in range(len(yes)):
+            
+            content = no[idx]['content']
+            # 分词 + 过滤
+            word_list = jieba.lcut_for_search(content)
+            word_list = list(filter(lambda x:x not in ignore_list,word_list))
+            content = ' '.join(word_list)
+            if content == '':
                 continue
             flag = False
-            loss,_ = sess.run([cross_entropy,train_op],feed_dict=feed_fn(string,flag)) # accuracy acc
+            loss,_ = sess.run([cross_entropy,train_op],feed_dict=feed_fn(content,flag)) # accuracy acc
             if i%100 == 0:
                 print('epoch:' + str(i) + '----neg train----')
                 print('loss:',loss)
                 print('----------------------------------------')
+
+
+            content = yes[idx]['content']
+            # 分词 + 过滤
+            word_list = jieba.lcut_for_search(content)
+            word_list = list(filter(lambda x:x not in ignore_list,word_list))
+            content = ' '.join(word_list)
+            if content == '':
+                continue
+            flag = True
+            loss,_ = sess.run([cross_entropy,train_op],feed_dict=feed_fn(content,flag)) # accuracy acc
+            if i%100 == 0:
+                print('epoch:' + str(i) + '----pos train----')
+                print('loss:',loss)
+                print('----------------------------------------')
+
         
-        string = choice(yes)['content']
-        if string == '':
-            string = choice(yes)['content']
-        if string == '':
-            continue
-        flag = True
-        loss,_ = sess.run([cross_entropy,train_op],feed_dict=feed_fn(string,flag)) # acc accuracy
-        if i%100 == 0:
-            print('epoch:' + str(i) + '----pos train----')
-            print('loss:',loss)
-            print('----------------------------------------')
 
     folder = os.path.exists(subCkptDirPath)
     if not folder:
