@@ -1,7 +1,7 @@
 from dao.classify import classify,unclassify
 from dao.category import query_categories,create_category,modify_category,delete_category,orderChange,colorChange
 from dao.note import create_note,modify_note,delete_note
-from dao.notes import query_notes
+from dao.notes import query_notes,find_notes
 from flask import Flask, request
 import flask_cors
 from classifier import similarAlg
@@ -67,6 +67,12 @@ def category_with_id(category_id):
 @app.route('/order/<category_id>/<order>', methods=['GET'])
 def order(category_id,order): 
     return orderChange(category_id,order)
+
+@app.route('/search', methods=['POST'])
+def search(): 
+    if request.method == 'POST':
+        content = request.form['content']
+    return find_notes(content)
 
 
 if __name__ == '__main__':

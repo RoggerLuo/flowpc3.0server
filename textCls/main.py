@@ -121,9 +121,7 @@ def train(categoryId,yes,no,epoch,negSample_times=5):
                 print('epoch:' + str(i) + '----pos train----')
                 print('loss:',loss)
                 print('----------------------------------------')
-
-        
-
+                
     folder = os.path.exists(subCkptDirPath)
     if not folder:
         os.makedirs(subCkptDirPath)

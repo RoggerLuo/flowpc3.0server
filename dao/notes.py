@@ -2,6 +2,13 @@ from dbEngine import run,run_middleware
 # import numpy as np
 import time
 import json
+def find_notes(content):
+    def callback(conn,cursor):
+        cursor.execute("select * from note where content like %s ",['%'+content+'%'])
+        values = cursor.fetchall()
+        columns = ['id','content','category','create_time','modify_time','status']
+        return [dict(zip(columns,value)) for value in values]
+    return run(callback)
 
 def mark_training_notes(notes):
     def callback(conn,cursor):
