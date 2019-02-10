@@ -42,15 +42,15 @@ def get_categorized_notes():
         return [dict(zip(columns,value)) for value in values]
     return run_middleware(callback)
 
-def query_notes(categoryId,pageSize,pageNum):
-    if pageNum == None:
-        pageNum = 1
+def query_notes(categoryId,pageSize,start):
+    if start == None:
+        start = 1
     if pageSize == None:
         pageSize = 10
     if categoryId == None:
         categoryId = 'all'
 
-    pageNum = int(pageNum)
+    start = int(start)
     pageSize = int(pageSize)
     def callback(conn,cursor):
         notes = []
@@ -58,12 +58,12 @@ def query_notes(categoryId,pageSize,pageNum):
             if categoryId == '0':
                 cursor.execute(
                     "SELECT * from note where category=%s and status=0 Order By modify_time Desc limit %s,%s",
-                    [categoryId,(pageNum-1)*pageSize,pageSize]
+                    [categoryId,start,pageSize]
                 )
             else:
                 cursor.execute(
                     "SELECT * from note where status=0 Order By modify_time Desc limit %s,%s",
-                    [(pageNum-1)*pageSize,pageSize]
+                    [start,pageSize]
                 )
             notes = cursor.fetchall()
         else:
@@ -89,7 +89,7 @@ def query_notes(categoryId,pageSize,pageNum):
             filterdNotes = list(filter(lambda x:x[2]==0 or str(x[2])==categoryId,predictionNotes))
             filterdNotes = sorted(filterdNotes, key=lambda x: -x[4])
             # 加上分页
-            notes = filterdNotes[(pageNum-1)*pageSize:pageNum*pageSize]
+            notes = filterdNotes[start:start+pageSize]
 
         # values = cursor.fetchall()
         columes = ['id','content','category','create_time','modify_time','status']

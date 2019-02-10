@@ -30,8 +30,8 @@ def _unclassify(note_id):
 def notes(): # 各种条件查询
     categoryId = request.args.get('categoryId')
     pageSize = request.args.get('pageSize')
-    pageNum = request.args.get('pageNum')
-    return query_notes(categoryId,pageSize,pageNum)
+    start = request.args.get('start')
+    return query_notes(categoryId,pageSize,start)
 
 @app.route('/note', methods=['POST']) # post方法要使用  x-www-form来访问，不然400
 def note(): 
@@ -73,7 +73,6 @@ def search():
     if request.method == 'POST':
         content = request.form['content']
     return find_notes(content)
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=6664, debug=False) 
