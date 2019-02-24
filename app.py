@@ -10,7 +10,7 @@ def wordscut():
     if request.method == 'POST':
         content = request.form['content']
         words_list = jieba.lcut_for_search(content)
-    return json.dumps(words_list)
+    return json.dumps(words_list,ensure_ascii=False)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=6664, debug=False) 
