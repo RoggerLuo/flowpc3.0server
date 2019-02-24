@@ -1,6 +1,7 @@
 from flask import Flask, request
 import flask_cors
 import jieba
+app = Flask(__name__, static_folder='static')
 flask_cors.CORS(app, supports_credentials=True)
 
 @app.route('/wordscut', methods=['POST'])
