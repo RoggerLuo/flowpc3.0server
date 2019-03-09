@@ -7,8 +7,8 @@ intraConfig = {'host':'192.168.1.2','port':'6033','user':'root', 'password':'!@a
 
 def run(callback):
     # conn = mysql.connector.connect(**synology)
-    conn = mysql.connector.connect(**intraConfig)
-    # conn = mysql.connector.connect(**outerConfig)
+    # conn = mysql.connector.connect(**intraConfig)
+    conn = mysql.connector.connect(**outerConfig)
 
     cursor = conn.cursor()
     try:
